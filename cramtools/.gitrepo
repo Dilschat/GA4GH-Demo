@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/enasequence/cramtools.git
+	branch = master
+	commit = b868e69edb80f8d0f470c5f6d8c78fecb490a18a
+	parent = e302952b391390dfdb9651d96fc985135340c01c
+	cmdver = 0.3.1

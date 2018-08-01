@@ -1,0 +1,509 @@
+syntax = "proto3";
+package org.phenopackets.schema.v1.core;
+
+import "google/protobuf/timestamp.proto";
+
+//option java_package = "org.phenopackets.api.v1.core";
+option java_multiple_files = true;
+//option java_outer_classname = "PhenoPacket";
+
+message MetaData {
+    // timestamp for when this phenopacket was created
+    google.protobuf.Timestamp created = 1;
+    // some kind of identifier for the contributor/ program
+    string created_by = 2;
+    // a listing of the ontologies/resources referenced in the phenopacket
+    repeated Resource resources = 3;
+}
+
+// Description of an external resource used for referencing an object. For example the resource may be an ontology such
+// as the HPO or SNOMED.
+// FHIR mapping: CodeSystem (http://www.hl7.org/fhir/codesystem.html)
+message Resource {
+    // for OBO Ontologies, the value of this string MUST always be the official
+    // OBO ID, which is always equivalent to the ID prefix in lower case.
+    // Examples: hp, go, mp, mondo
+    // Consult http://obofoundry.org for a complete list
+    // For other ontologies (e.g SNOMED), use the prefix in identifiers.org
+    string id = 1;
+    // e.g. The Human Phenotype Ontology
+    // for OBO Ontologies, the value of this string SHOULD be the same as the title
+    // field on http://obofoundry.org
+    // however, this field is purely for information purposes and software
+    // should not encode any assumptions
+    string name = 2;
+    // The prefix used in the CURIE e.g. HP, MP, ECO
+    string namespace_prefix = 3;
+    
+    // For OBO ontologies, this should always be the PURL, e.g.
+    // http://purl.obolibrary.org/obo/hp.owl, http://purl.obolibrary.org/obo/hp.obo
+    string url = 4;
+    
+    // for OBO ontologies, this should be the versionIRI
+    string version = 5;
+}
+
+// A class (aka term, concept) in an ontology.
+// FHIR mapping: CodeableConcept (http://www.hl7.org/fhir/datatypes.html#CodeableConcept)
+//   see also Coding (http://www.hl7.org/fhir/datatypes.html#Coding)
+message OntologyClass {
+    // a CURIE-style identifier e.g. HP:0100024, MP:0001284, UBERON:0001690.
+    // This is the primary key for the ontology class
+    // REQUIRED?
+    string id = 1;
+    
+    // class label, aka name. E.g. "Abnormality of cardiovascular system"
+    string label = 2;
+}
+
+// An individual phenotypic feature, observed as either present or absent (negated), with possible onset, modifiers and
+// frequency
+// FHIR mapping: Condition (https://www.hl7.org/fhir/condition.html) or Observation (https://www.hl7.org/fhir/observation.html)
+message Phenotype {
+    // Free-text description of the phenotype. Note this is not a acceptable place to document/describe the phenotype -
+    // the type and onset etc... fields should be used for this purpose.
+    string description = 1;
+
+    // The primary ontology class which describes the phenotype. For example "HP:0001363"  "Craniosynostosis"
+    // FHIR mapping: Condition.identifier
+    OntologyClass type = 2;
+
+    // Flag to indicate whether the phenotype was observed or not. Default is 'false', in other words the phenotype was
+    // observed. Therefore it is only required in cases to indicate that the phenotype was looked for, but not observed.
+    bool negated = 3;
+
+    // Severity of the condition e.g. subclasses of HP:0012824-Severity or SNOMED:272141005-Severities
+    // FHIR mapping: Condition.severity
+    OntologyClass severity = 4;
+
+    // subclasses of HP:0012823 ! Clinical modifier apart from Severity HP:0012824 - Severity
+    repeated OntologyClass modifiers = 5;
+
+    // the values of this will come from the HPO onset hierarchy
+    // i.e. subclasses of HP:0003674
+    // FHIR mapping: Condition.onset
+    oneof onset {
+        Age age_of_onset = 6;
+        google.protobuf.Timestamp time_of_onset = 7;
+        Period period_of_onset = 8;
+        OntologyClass class_of_onset = 9;
+    }
+
+    // Evidences for how the phenotype was determined.
+    repeated Evidence evidence = 10;
+}
+
+// FHIR mapping: Condition.evidence (https://www.hl7.org/fhir/condition-definitions.html#Condition.evidence)
+message Evidence {
+    // The encoded evidence type using, for example the Evidence & Conclusion Ontology (ECO - http://purl.obolibrary.org/obo/eco.owl)
+    OntologyClass evidence_code = 1;
+    ExternalReference reference = 2;
+}
+
+// FHIR mapping: Reference (https://www.hl7.org/fhir/references.html)
+message ExternalReference {
+    //e.g. ISBN, PMID:123456, DOI:...
+    string id = 1;
+    string description = 2;
+}
+
+// An individual (or subject) typically corresponds to an individual
+// human or another organism.
+// FHIR mapping: Patient (https://www.hl7.org/fhir/patient.html).
+message Individual {
+    // An identifer for the individual. This must be unique within the record.
+    string id = 1;
+    // The date of birth of the individual - rounded down to the closest known year/month/day/hour/minute
+    // e.g. "2018-03-01T00:00:00Z" for someone born on an unknown day in March 2018
+    // or "2018-01-01T00:00:00Z" for someone born on an unknown day in 2018
+    // or empty if unknown/ not stated.
+    google.protobuf.Timestamp date_of_birth = 2;
+    //todo oneof age {Timestamp; Age; OntologyClass}?
+
+    // A PATO term for the biological sex of the individual
+    // http://purl.obolibrary.org/obo/PATO_0000047
+    OntologyClass sex = 3;
+
+    repeated Phenotype phenotypes = 4;
+
+    // NCBI taxonomic identifier NCBITaxon e.g. NCBITaxon:9606 or NCBITaxon:1337
+    // For resources where there may be more than one organism being studied it is advisable to indicate the taxomic
+    // identifier of that organism, to it's most specific level
+    OntologyClass taxonomy = 5;
+
+    // The time at which this Individual's record was created.
+    google.protobuf.Timestamp created = 6;
+
+    // The time at which this Individual record was updated.
+    google.protobuf.Timestamp updated = 7;
+}
+
+// See https://github.com/ga4gh-metadata/metadata-schemas/blob/d4ca1b4b36a5e7b3a17db79da9ae03a2114cfcaf/schemas/biometadata.proto#L84-L138
+// A Biosample refers to a unit of biological material from which the substrate
+// molecules (e.g. genomic DNA, RNA, proteins) for molecular analyses (e.g.
+// sequencing, array hybridisation, mass-spectrometry) are extracted. Examples
+// would be a tissue biopsy, a single cell from a culture for single cell genome
+// sequencing or a protein fraction from a gradient centrifugation.
+// Several instances (e.g. technical replicates) or types of experiments (e.g.
+// genomic array as well as RNA-seq experiments) may refer to the same Biosample.
+// FHIR mapping: Specimen (http://www.hl7.org/fhir/specimen.html).
+message Biosample {
+
+    // The Biosample id This is unique in the
+    // context of the server instance.
+    string id = 1;
+
+    // The ID of the dataset this Biosample belongs to.
+    string dataset_id = 2;
+
+    // The Biosample's name This is a label or symbolic identifier for the biosample.
+    string name = 3;
+
+    // The biosample's description. This attribute contains human readable text.
+    // The "description" attributes should not contain any structured data.
+    string description = 4;
+
+    // characteristics object uses lists of Phenotype objects to describe
+    // diseases, phenotypes, source ... associated with this BioSample.
+    repeated Phenotype phenotypes = 5;
+
+    // The :ref:`ISO 8601<metadata_date_time>` time at which this Biosample record
+    // was created.
+    google.protobuf.Timestamp created = 6;
+
+    // The :ref:`ISO 8601<metadata_date_time>` time at which this Biosample record was
+    // updated.
+    google.protobuf.Timestamp updated = 7;
+
+    // The id of the individual this biosample was derived from.
+    string individual_id = 8;
+
+    // NCBI taxonomic identifier (NCBITaxon) of the organism from which the sample was taken e.g. NCBITaxon:9606
+    OntologyClass taxonomy = 9;
+
+    // A map of additional information about the Biosample.
+    Attributes attributes = 10;
+
+    // External identifiers representing this biosample. These are considered
+    // different representation of the same record, not records which are in some
+    // other relation with the record at hand.
+    repeated ExternalReference external_references = 11;
+
+    // An age object describing the age of the individual this biosample was
+    // derived from at the time of collection. The Age object allows the encoding
+    // of the age either as ISO8601 duration or time interval (preferred), or
+    // as ontology term object.
+    // Example:
+    //   "individual_age_at_collection": {
+    //     "age": "P12Y0M",
+    //     "age_class": {
+    //         "term": "Juvenile onset",
+    //         "term_id": "HP:0003621"
+    //     }
+    // },
+    //See http://build.fhir.org/datatypes
+    Age individual_age_at_collection = 12;
+
+    // The address coded as GeoLocation where the biosample was collected.
+    GeoLocation location = 13;
+
+}
+
+// See http://build.fhir.org/datatypes and http://build.fhir.org/condition-definitions.html#Condition.onset_x_
+// In FHIR this is represented as a UCUM measurement - http://unitsofmeasure.org/trac/
+message Age {
+
+    // The :ref:`ISO 8601<metadata_date_time>` age of this object as ISO8601
+    // duration or time intervals. The use of time intervals makes an additional
+    // anchor unnecessary (i.e. DOB and age can be represented as start-anchored
+    // time interval, e.g. 1967-11-21/P40Y10M05D)
+    string age = 1;
+
+    // An age class, e.g. corresponding to the use of "age of onset" in HPO.
+    // HPO is recommended, for example, subclasses of "Onset":
+    // http://purl.obolibrary.org/obo/HP_0003674
+    // Example:
+    //  age_class : { term_id : "HP:0003596", term : "Middle age onset" }
+    OntologyClass age_class = 2;
+}
+
+// A GeoLocation object provides information about a geographic position
+// related to a record. Examples could be:
+//  - an address, e.g. of a lab performing an analysis
+//  - provenance of an individual, obfuscated to a larger order administrative
+//    entity (Suffolk, U.K.)
+//  - a lat/long/alt position where an environmental sample was collected
+//   The geographic point object uses the default units from the DCMI point scheme
+//  http://dublincore.org/documents/dcmi-point/
+//  and avoids optional representation in non-standard units.
+message GeoLocation {
+    // a text representation, preferably using standard geographic identification
+    // elements, of the corresponding latitude,longitude(,altitude)
+    // This representation serves the purposes to
+    //  - capture standard data entry parameters
+    //  - provide a sanity check for latitude,longitude values
+    // Example:
+    //  - 34 Washington Blvd, Marina del Rey, CA  90292, United States
+    //  - Str Marasesti 5, 300077 Timisoara, Romania
+    //  - Heidelberg, Deutschland
+    string label = 1;
+
+    // an optional indication of the maximum precision to be derived from the
+    // latitude,longitude values
+    // Example:
+    // Given a street address "Winterthurerstrasse 190, 8057 Zürich, Switzerland",
+    // a privacy driven (destructive) obfuscation approach could recode this
+    // to
+    //  "latitude": 47.37, "longitude": 8.54
+    //  while providing
+    //  "precision":"city", "label": "Zürich, Switzerland"
+    // ... indicating that the original location could correspond to any
+    // latitude,longitude point value inside the administrative boundaries of
+    // the city of Zürich, Switzerland
+    string precision = 2;
+
+    // signed decimal degrees (North, relative to Equator)
+    double latitude = 3;
+
+    // signed decimal degrees (East, relative to IERS Reference Meridian)
+    double longitude = 4;
+
+    // optional, e.g. for environmental samples
+    double altitude = 5;
+}
+
+enum NullValue {
+    // Null value.
+    NULL_VALUE = 0;
+}
+
+// Type defining a collection of attributes associated with various protocol
+// records. Each attribute is a name that maps to an array of one or more
+// values. Values are chosen from both internal protobuf types and GA4GH.
+//  Values should be split into array elements instead of using a separator
+// syntax that needs to parsed.
+message AttributeValue {
+    oneof value {
+        string string_value = 1;
+        int64 int64_value = 2;
+        int32 int32_value = 3;
+        bool bool_value = 4;
+        double double_value = 5;
+        ExternalReference external_reference = 6;
+        OntologyClass ontology_class = 7;
+        Experiment experiment = 8;
+        //Program is missing a definition in the original metadaa-schemas
+        //        Program program = 9;
+        Analysis analysis = 10;
+        NullValue null_value = 11;
+        Attributes attributes = 12;
+        AttributeValues attribute_values = 13;
+    }
+}
+
+message AttributeValues {
+    repeated AttributeValue values = 1;
+}
+
+message Attributes {
+    map<string, AttributeValues> attributes = 1;
+}
+
+// An experimental preparation of a sample.
+message Experiment {
+    // The experiment ID
+    string id = 1;
+
+    // The name of the experiment.
+    string name = 2;
+
+    // A description of the experiment.
+    string description = 3;
+
+    // The time at which the record of this experiment was last updated.
+    // Format: ISO 8601, YYYY-MM-DDTHH:MM:SS.SSS (e.g. 2015-02-10T00:03:42.123Z)
+    string updated = 5;
+
+    // The time at which this experiment was performed.
+    // Granularity here is variable (e.g. date only).
+    // Format: ISO 8601, YYYY-MM-DDTHH:MM:SS (e.g. 2015-02-10T00:03:42)
+    string run_time = 6;
+
+    // The molecule examined in this experiment. (e.g. genomics DNA, total RNA)
+    string molecule = 7;
+
+    // The experiment technique or strategy applied to the sample.
+    // (e.g. whole genome sequencing, RNA-seq, RIP-seq)
+    string strategy = 8;
+
+    // The method used to enrich the target. (e.g. immunoprecipitation, size
+    // fractionation, MNase digestion)
+    string selection = 9;
+
+    // The name of the library used as part of this experiment.
+    string library = 10;
+
+    // The configuration of sequenced reads. (e.g. Single or Paired).
+    string library_layout = 11;
+
+    // The instrument model used as part of this experiment.
+    // This maps to sequencing technology in BAM.
+    string instrument_model = 12;
+
+    // The data file generated by the instrument.
+    // TODO: This isn't actually a file is it?
+    // Should this be `instrumentData` instead?
+    string instrument_data_file = 13;
+
+    // Name of the laboratory where this experiment was performed.
+    string sequencing_center = 14;
+
+    // The address coded as geolocation object of the laboratory.
+    GeoLocation location = 18;
+
+    // The platform unit used as part of this experiment. This is a
+    // flowcell-barcode
+    // or slide unique identifier.
+    string platform_unit = 15;
+
+    // A map of additional experiment information.
+    Attributes attributes = 17;
+}
+
+// An analysis contains an interpretation of one or several experiments. (e.g.
+// SNVs, copy number variations, methylation status) together with information
+// about the methodology used.
+message Analysis {
+    // Formats of id | name | description | accessions are described in the
+    // documentation on general attributes and formats.
+    string id = 1;
+
+    string name = 2;
+
+    string description = 3;
+
+    // The time at which this record was created, in ISO 8601 format.
+    string created = 4;
+
+    // The time at which this record was last updated, in ISO 8601 format.
+    string updated = 5;
+
+    // The type of analysis.
+    string type = 6;
+
+    // The software run to generate this analysis.
+    repeated string software = 7;
+
+    // A map of additional analysis information.
+    Attributes attributes = 9;
+}
+message Period {
+    google.protobuf.Timestamp start = 1;
+    google.protobuf.Timestamp end = 2;
+}
+
+// Simple identifier name tuple to link to a concept
+message Disease {
+    // The identifier of this disease e.g. MONDO:0007043, OMIM:101600, Orphanet:710, DOID:14705 (note these are all equivalent)
+    string id = 1;
+    // Textual name of the disease e.g. Pfeiffer syndrome
+    string label = 2;
+}
+
+// https://software.broadinstitute.org/gatk/documentation/article?id=11016
+message Pedigree {
+    repeated Person persons = 1;
+
+    message Person {
+        enum Sex {
+            UNKNOWN = 0;
+            MALE = 1;
+            FEMALE = 2;
+        }
+        enum AffectedStatus {
+            MISSING = 0;
+            UNAFFECTED = 1;
+            AFFECTED = 2;
+        }
+        string family_id = 1;
+        string individual_id = 2;
+        string paternal_id = 3;
+        string maternal_id = 4;
+        Sex sex = 5;
+        AffectedStatus affected_status = 6;
+    }
+}
+
+message File {
+    // Full system path to the file. e.g. /data/genomes/file1.vcf.gz
+    string path = 1;
+    // URI for the file e.g. file://data/genomes/file1.vcf.gz or https://opensnp.org/data/60.23andme-exome-vcf.231?1341012444
+    string uri = 2;
+}
+
+// Defines a relationship between two individuals as referred to by their identifiers and an ontology term defining the
+// relationship between the two entities.
+message Relationship {
+    string source_id = 1;
+    // An ontology term/class used to describe the relationship between the source and the target, for example
+    // "contained in" http://purl.obolibrary.org/obo/RO_0001018
+    OntologyClass relationship_class = 2;
+    string target_id = 3;
+}
+
+// Simple placeholder for a Gene concept
+message Gene {
+    // a CURIE with a prefix that is NCBIGene, HGNC, ENSEMBL, UCSC e.g. HGNC:347, ENSG00000120705, uc003ldc.6
+    // https://www.genenames.org/cgi-bin/gene_symbol_report?q=data/hgnc_data.php&hgnc_id=HGNC:3477
+    string id = 1;
+    // The official gene symbol as designated by the organism gene nomenclature committee e.g. ETF1 or Etf1
+    string symbol = 2;
+}
+
+// Human genome reference assembly - major version
+enum GenomeAssembly {
+    option allow_alias = true;
+    //  defaulted to GRCh37 as this is more common than NCBI36?
+    GRCH_37 = 0;
+    HG_19 = 0;
+
+    NCBI_36 = 1;
+    HG_18 = 1;
+
+    GRCH_38 = 2;
+    HG_38 = 2;
+}
+
+// Representation of the sequence coordinate system.
+enum CoordinateSystem {
+    ZERO_BASED = 0;
+    ONE_BASED = 1;
+}
+
+// Placeholder message in SPDI format (https://www.ncbi.nlm.nih.gov/variation/notation/)
+// SPDI format is the exchange standard used for ClinVar, dbSNP and soon the EVA
+// Tools for interconversion between SPDI, HGVS and VCF exist at https://api.ncbi.nlm.nih.gov/variation/v0/
+// Subject to change - this could be replaced with a GA4GH Variant Representation when finalised by the working group.
+// See: https://docs.google.com/document/d/1Sulg3kECnorTEAbutINOsK-lFkKAcKpl6IHgPaPQEgA
+// See: https://github.com/ga4gh-beacon/specification/blob/master/beacon.yaml
+message Variant {
+    // genome assembly isn't strictly necessary if using the sequence accession as that will be unique for the assembly/sequence
+    GenomeAssembly genome_assembly = 1;
+    // Accession of the sequence e.g. NC_000010.10 (GRCh37 chromosome 10)
+    string sequence = 2;
+    // Coordinate system of the position. Defaults to ZERO_BASED. Note that SPDI and VMC mandate a ZERO_BASED system,
+    // whereas VCV and HGVS use ONE_BASED systems. This is specified here as a means of providing unambiguous positioning
+    // as opposed to it being implicit within the spec of the system.
+    CoordinateSystem coordinate_system = 3;
+    // Sequence position at which the change is located, in the specified coordinate system.
+    int32 position = 4; //start, end...
+    // Deleted bases on the forward strand - equivalent to the VCF REF
+    string deletion = 5;
+    // Inserted bases on the forward strand - equivalent to the VCF ALT
+    string insertion = 6;
+    // SPDI can't represent the full set of HGVS expressions, in which case use the HGVS string
+    string hgvs = 7;
+    // Map of sample_id to genotype of this variant with respect to the listed individuals. The genotype is described
+    // using the GENO ontology.
+    map<string, OntologyClass> sample_genotypes = 8;
+}

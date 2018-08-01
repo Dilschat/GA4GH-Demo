@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/broadinstitute/picard.git
+	branch = master
+	commit = 880df7893de3d4b1a35bdc86b4f08aacf9cf8074
+	parent = 1fd0cda53241d5d5b95bfd9338ab2a115ab83ee1
+	cmdver = 0.3.1

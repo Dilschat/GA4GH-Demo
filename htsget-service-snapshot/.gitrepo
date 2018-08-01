@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Dilschat/ega-dataedge.git
+	branch = experimental_deploy
+	commit = e3c26dbe8dcd28b899ed6c5e1b21103898425afa
+	parent = none
+	cmdver = 0.3.1

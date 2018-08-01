@@ -1,0 +1,12 @@
+{
+  "htsget":
+  {
+    "format":"BAM",
+    "urls":
+    [
+      {"url":"http://DOWNLOADER/sample?accession=SAMN07666417&format=BAM&part=1"},
+      {"url":"http://DOWNLOADER/sample?accession=SAMN07666417&format=BAM&part=2"},
+      {"url":"http://DOWNLOADER/sample?accession=SAMN07666417&format=BAM&part=3"}
+    ],
+    "md5Hash":""}
+}

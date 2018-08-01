@@ -1,0 +1,43 @@
+{
+	"accession": "TEST1",
+	"name": "Test Sample",
+	"domain": "abcde12345",
+	"update": "2016-05-05T11:36:57Z",
+	"release": "2016-04-01T11:36:57Z",
+	"characteristics": {
+		"age": [
+			{
+				"text": "3",
+				"unit": "year"
+			}
+		],
+		"organism": [
+			{
+				"text": "Homo sapiens",
+				"ontologyTerms": [
+					"http://purl.obolibrary.org/obo/NCBITaxon_9606"
+				]
+			}
+		],
+		"organism part": [
+			{
+				"text": "heart"
+			},
+			{
+				"text": "lung"
+			}
+		]
+	},
+	"relationships": [
+		{
+			"source": "TEST1",
+			"type": "derived from",
+			"target": "TEST2"
+		}
+	],
+	"externalReferences": [
+		{
+			"url": "http://www.google.com"
+		}
+	]
+}

@@ -1,0 +1,46 @@
+.facet-checkbox {
+     display: none;
+}
+
+label.facet {
+    display: flex;
+    align-items: baseline;
+}
+
+div div.facet-container:first-child label.facet{
+    margin-top: .5rem
+}
+
+div div.facet-container label.facet {
+    margin-top: 1px;
+}
+
+label.facet > .show-if-checked {
+    margin-right: 5px;
+}
+
+.facet-container label.facet > *:nth-last-child(1) {
+    flex-grow: 1;
+}
+
+.facet-container .facet-checkbox:not(:checked) ~ .facet > .show-if-checked {
+    visibility:hidden
+}
+
+.facet-container [type='checkbox'] + label, [type='radio'] + label {
+    margin: 0;
+}
+
+#filter-apply:disabled {
+    background-color: #999;
+}
+
+/*
+#local-masthead.is-stuck .menu>li.sticky-search {
+    display: inherit;
+}
+
+#local-masthead .menu>li.sticky-search {
+    display:none;
+}
+*/

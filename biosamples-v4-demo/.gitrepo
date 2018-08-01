@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Dilschat/biosamples-v4.git
+	branch = ga4gh_search_inegration
+	commit = b104b1dfc29c03261f7ea11a8c6292a35cb2c22e
+	parent = bd27bdf5ecd5456331b497027bc83f9b3adef93d
+	cmdver = 0.3.1

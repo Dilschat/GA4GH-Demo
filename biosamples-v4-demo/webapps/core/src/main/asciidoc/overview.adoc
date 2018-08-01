@@ -1,0 +1,15 @@
+= [.ebi-color]#BioSamples documentation#
+:last-update-label!:
+
+*Welcome to BioSamples*! A sample repository where you can search, submit and curate sample metadata used in various
+projects and context. This documentation should help you better understanding what is BioSamples and how to use our service.
+
+If you're a developer and you need a refresh on how our API works, have a look at our +++<a th:href="@{/docs/references/api/overview/}">developer guides</a>+++.
+
+If you have a question about BioSamples, get a look at the +++<a th:href="@{/docs/faq}">FAQ section</a>+++, or contact us using one of the available channels listed in the +++<a th:href="@{/docs/contacts}">contacts page</a>+++.
+ 
+This website requires cookies, and the limited processing of your personal data in order to function. By using the site you are agreeing to this as outlined in our https://www.ebi.ac.uk/data-protection/privacy-notice/embl-ebi-public-website[Privacy Notice] and https://www.ebi.ac.uk/about/terms-of-use[Terms of Use].
+
+If you submit information to BioSamples please note that we will handle your submission in accordance with our https://www.ebi.ac.uk/data-protection/privacy-notice/biosamples-submissions[Submission Privacy Notice].
+ 
+ 

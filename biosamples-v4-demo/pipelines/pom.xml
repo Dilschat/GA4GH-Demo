@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>pipelines</artifactId>
+
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>uk.ac.ebi.biosamples</groupId>
+		<artifactId>biosamples</artifactId>
+		<version>4.1.1-SNAPSHOT</version>
+	</parent>
+
+	<profiles>
+		<profile>
+		<!-- this profile contains references to internal-only artifacts -->
+		<!-- i.e. oracle drivers that cannot be redistributed in public -->
+			<id>embl-ebi</id>
+			<modules>
+				<module>ena</module>
+			</modules>
+		</profile>
+	</profiles>
+
+	<modules>
+		<module>ncbi</module>
+		<module>curation</module>
+		<module>zooma</module>
+		<module>sampletab</module>
+		<module>legacyxml</module>
+		<module>reindex</module>
+		<module>export</module>
+		<module>copydown</module>
+	</modules>
+</project>

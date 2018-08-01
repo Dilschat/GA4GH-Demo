@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/EGA-archive/ega-htsjdk.git
+	branch = master
+	commit = e62876d88eca1e1e05ff2bb9cd99aa18da1c674d
+	parent = 629ae9690876aa726474ecf36808155d14bdd45c
+	cmdver = 0.3.1

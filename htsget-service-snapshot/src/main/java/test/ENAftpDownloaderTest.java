@@ -2,13 +2,15 @@ package test;
 
 import eu.elixir.ega.ebi.dataedge.service.ena.htsget.service.internal.ENAFtpDownloader;
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.*;
-import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
 
+@RunWith(SpringRunner.class)
 class ENAftpDownloaderTest {
     /**
      * For running this test you need to put into root folder of project ERR1777637_1.fastq.gz

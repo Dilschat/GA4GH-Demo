@@ -1,28 +1,16 @@
 package test;
 
-import eu.elixir.ega.ebi.dataedge.service.ena.htsget.service.internal.FastqConverter;
-import htsjdk.samtools.CRAMFileReader;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.cram.ref.CRAMReferenceSource;
-import net.sf.cram.ref.ReferenceSource;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * For running this tests you will need test bam and cram files. This files can be created from test100k.fastq.gz using
  * picard tools and cramtools.
  */
+@RunWith(SpringRunner.class)
 class FastqConverterTest {
 
+    /*
     @Test
     public void bamConverterTest() throws IOException {
         FastqConverter converter = new FastqConverter();
@@ -70,4 +58,5 @@ class FastqConverterTest {
 
 
     }
+    */
 }

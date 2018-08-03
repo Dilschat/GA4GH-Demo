@@ -3,8 +3,7 @@
 *NOTE: This instruction assumes that you already have local working biosamples service.*
 
 
-You can use for setting up local versions of biosamples and htsget service using [shell script](./build_external_libs.sh). This setting up needed only for first running.
-Then for deploying all required services use [shell script](./run_all_services.sh). You can deploy this demo manually as alternative following instructions below:
+You can use for setting up local versions of biosamples and htsget service using [build_external_libs.sh](./build_external_libs.sh). This setting up needed only for first running. Then for deploying all required services use [run_all_services.sh](./run_all_services.sh). You can deploy this demo manually as alternative following instructions below:
 
 ## Phenopackets exportation
 

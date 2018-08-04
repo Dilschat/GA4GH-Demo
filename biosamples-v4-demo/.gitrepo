@@ -7,5 +7,5 @@
 	remote = https://github.com/Dilschat/biosamples-v4.git
 	branch = ga4gh_search_inegration
 	commit = cdfc5d62558416c13da055fd243bef09f4a3fc21
-	parent = f4f44612619a70748e9481a160e6c1a2e50cad01
+	parent = 16b36c809db235b891a11f527e88e3a277e3780f
 	cmdver = 0.3.1

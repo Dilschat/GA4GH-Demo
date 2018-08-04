@@ -2,12 +2,16 @@ package test;
 
 import eu.elixir.ega.ebi.dataedge.dto.ena.dto.RawTicket;
 import eu.elixir.ega.ebi.dataedge.service.ena.htsget.service.internal.ENATicketService;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
+
+@RunWith(SpringRunner.class)
 class ENATicketServiceTest {
     @Test
     public void testTicket1(){

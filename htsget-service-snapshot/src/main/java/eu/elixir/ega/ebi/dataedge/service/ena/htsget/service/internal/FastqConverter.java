@@ -90,10 +90,8 @@ public class FastqConverter {
         SAMRecordIterator recordsIterator = samReader.iterator();
         writer.setHeader(header.clone());
         writer.setPreserveReadNames(false);
-
         while (recordsIterator.hasNext()) {
-            SAMRecord record = recordsIterator.next();
-            writer.addAlignment(record);
+            writer.addAlignment(recordsIterator.next());
         }
 
         recordsIterator.close();

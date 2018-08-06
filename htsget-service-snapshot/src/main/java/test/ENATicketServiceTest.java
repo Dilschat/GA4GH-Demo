@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringRunner.class)
-class ENATicketServiceTest {
+public class ENATicketServiceTest {
     @Test
     public void testTicket1(){
         ENATicketService linkService = new ENATicketService();

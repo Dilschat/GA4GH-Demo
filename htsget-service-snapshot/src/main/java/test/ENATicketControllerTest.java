@@ -39,7 +39,9 @@ public class ENATicketControllerTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedTicket = new String(java.nio.file.Files.readAllBytes(Paths.get("/Users/dilsatsalihov/Desktop/gsoc/ega-dataedge/expectedTicket.json")));
+        ClassLoader classLoader = getClass().getClassLoader();
+        File expectedFile = new File(classLoader.getResource("test_jsons/expectedTicket.json").getFile());
+        String expectedTicket = new String(java.nio.file.Files.readAllBytes(Paths.get(expectedFile.getAbsolutePath())));
         JSONAssert.assertEquals(expectedTicket,actualTicket, true);
     }
 
@@ -50,8 +52,9 @@ public class ENATicketControllerTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        System.out.println(actualTicket);
-        String expectedTicket = new String(java.nio.file.Files.readAllBytes(Paths.get("/Users/dilsatsalihov/Desktop/gsoc/ega-dataedge/expectedjson1.json")));
+        ClassLoader classLoader = getClass().getClassLoader();
+        File expectedFile = new File(classLoader.getResource("test_jsons/expectedjson1.json").getFile());
+        String expectedTicket = new String(java.nio.file.Files.readAllBytes(Paths.get(expectedFile.getAbsolutePath())));
         JSONAssert.assertEquals(expectedTicket,actualTicket, true);
     }
 }

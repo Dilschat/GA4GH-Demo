@@ -5,31 +5,6 @@
 
 You can use for setting up local versions of biosamples and htsget service using [build_external_libs.sh](./build_external_libs.sh). This setting up needed only for first running. Then for deploying all required services use [run_all_services.sh](./run_all_services.sh). You can deploy this demo manually as alternative following instructions below:
 
-## Phenopackets exportation
-
-Build and install phenopackets
-1. Build phenopacket-schema from [the github repository](https://github.com/phenopackets/phenopacket-schema) and following 
-the [building instructions](https://github.com/phenopackets/phenopacket-schema#building). *NOTE* that you should get the specific commit with hash `c67527e48f94fa71e8763c3a2a3234917b5c5bcb`.
-
-```bash
-# Building and installing phenopackets
-
-git clone https://github.com/phenopackets/phenopacket-schema.git
-cd phenopacket-schema
-
-# Get specific commit fot avoiding errors before release
-
-git reset --hard c67527e48f94fa71e8763c3a2a3234917b5c5bcb
-mvn clean install
-```
-
-2. Install built jar as local lib from the phenopacket-shchema:
-
-```bash
-# Install the package on your local machine
-
-mvn install:install-file -Dfile=./target/phenopacket-schema-0.0.7-SNAPSHOT.jar -DgroupId=org.phenopackets.schema.v1 -DartifactId=phenopacket-schema -Dversion=0.0.7-SNAPSHOT -Dpackaging=jar
-```
 
 ## Biosamples search
 

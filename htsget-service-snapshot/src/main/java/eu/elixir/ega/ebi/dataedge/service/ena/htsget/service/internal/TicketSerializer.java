@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class TicketSerializer extends StdSerializer<RawTicket> {
 
-    private final String SERVICE_URL = "http://DOWNLOADER";
+    private final String SERVICE_URL = "localhost:8086";
 
     protected TicketSerializer() { super(RawTicket.class);}
 

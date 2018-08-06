@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class ENAHtsgetService {
 
-    private final String host = "http://localhost:8080/ga4gh/sample"; //TODO change host to real
+    private final String host = "http://localhost:8086/ga4gh/sample"; //TODO change host to real
 
     public Optional<ENAHtsgetTicket> getTicket(String accession, String format) {
 

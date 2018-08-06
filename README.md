@@ -51,7 +51,13 @@ mvn install:install-file -Dfile=./target/ega-htsjdk-1.0-SNAPSHOT.jar -DgroupId=e
 
 ```
 
-3. Run htsget service using an IDE or in your terminal for using that in biosamples. Note that the HTSGET service will run on port 8080
+3. Run htsget service using an IDE or in docker container:
+```bash
+#run htsget
+docker-compose up -d htsget
+```
+
+ Note that the HTSGET service will run on port 8086
 
 4. Run biosamples
 ```bash
